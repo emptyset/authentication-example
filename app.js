@@ -8,9 +8,11 @@ var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
 var UserProvider = require('./userprovider-memory').UserProvider;
+var up = new UserProvider();
+//var User = require('.user')
 
 passport.use(new LocalStrategy(function (username, password, done) {
-	UserProvider.findByUsername(username, function (err, user) {
+	up.findByUsername(username, function (err, user) {
 		if (err) { return done(err); }
 		if (!user) { 
 			return done(null, false, { message: 'Incorrect username.' });
@@ -58,9 +60,13 @@ app.get('/', function (request, response) {
 });
 
 app.get('/login', function (request, response) {
-	response.render('login', { user: request.user, message: 'error' });
+	if (!request.user) {
+		response.render('login-form');
+	} else {
+		response.render('login', { user: request.user, message: 'error' });
+	}
 });
-app.post('/login', passport.authenticate('local', { successRedirect: '/', failureREdirect: '/login' }));
+app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.get('/logout', function (request, response) {
 	request.logout();
@@ -74,3 +80,11 @@ app.get('/account', ensureAuthenticated, function (request, response) {
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+passport.serializeUser(function(user, done) {
+  done(null, user.username);
+});
+
+/* passport.deserializeUser(function(user, done)) {
+	up.findByUsername(username, function (err, user) {
+}); */

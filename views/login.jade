@@ -1,17 +1,17 @@
 extends layout
 
-- if (message)
+- if (user)
   block content
     p message
 - else
-  <form action="/login" method="post">
+    <form action="/login" method="post">
     <div>
-      <label>Username:</label><input type="text" name="username" /><br />
+    <label>Username:</label><input type="text" name="username" /><br />
     </div>
     <div>
-      <label>Password:</label><input type="password" name="password" /><br />
+    <label>Password:</label><input type="password" name="password" /><br />
     </div>
     <div>
-      <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" />
     </div>
-  </form>
+    </form>
