@@ -34,8 +34,8 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-  app.use(express.cookieParser('ghostbusters'));
-  app.use(express.session({ secret: 'keyboard cat'}));
+app.use(express.cookieParser('ghostbusters'));
+app.use(express.session({ secret: 'keyboard cat'}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -78,13 +78,15 @@ app.get('/account', ensureAuthenticated, function (request, response) {
 });
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+	console.log('Express server listening on port ' + app.get('port'));
 });
 
 passport.serializeUser(function(user, done) {
-  done(null, user.username);
+	done(null, user.username);
 });
 
-/* passport.deserializeUser(function(user, done)) {
+passport.deserializeUser(function(username, done) {
 	up.findByUsername(username, function (err, user) {
-}); */
+		done(err, user);
+	});
+});
